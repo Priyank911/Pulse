@@ -1,7 +1,7 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td>
-      <img src="./client/public/pulse-banner.png" alt="Pulse" width="100%" />
+       <td>
+      <img src="./client/public/pulse-banner.png" alt="Pulse" width="100%" style="border-radius: 20px; display: block;" />
     </td>
     <td width="110" align="right" valign="middle" style="padding-left:16px;">
       <img src="./client/public/pulse-logo.svg" alt="Pulse Logo" width="90" />
