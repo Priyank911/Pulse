@@ -7,11 +7,11 @@
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev",
-    "build": "cd client && npm run build",
+    "build": "npm run prisma:generate && cd client && npm run build",
     "start": "cd server && npm start",
     "install:all": "npm install && cd server && npm install && cd ../client && npm install",
     "prisma:generate": "cd server && npx prisma generate",
-    "prisma:migrate": "cd server && npx prisma migrate deploy",
+    "prisma:migrate": "cd server && npx prisma db push --accept-data-loss",
     "prisma:seed": "cd server && npx prisma db seed",
     "postinstall": "cd server && npm install && cd ../client && npm install"
   },
