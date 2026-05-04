@@ -1,7 +1,7 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-       <td>
-      <img src="./client/public/pulse-banner.png" alt="Pulse" width="100%" style="border-radius: 20px; display: block;" />
+    <td>
+      <img src="./client/public/pulse-banner.png" alt="Pulse" width="100%" style="border-radius: 12px;" />
     </td>
     <td width="110" align="right" valign="middle" style="padding-left:16px;">
       <img src="./client/public/pulse-logo.svg" alt="Pulse Logo" width="90" />
@@ -32,7 +32,7 @@ Teams consistently fail to answer three questions: what is being built, who owns
 ## Dashboard
 
 <p align="center">
-  <img src="./docs/images/dashboard.png" alt="Pulse Admin Dashboard" width="100%" />
+  <img src="./docs/images/Dashboard.png" alt="Pulse Admin Dashboard" width="100%" />
 </p>
 
 The admin dashboard renders a live completion ring showing the overall task completion rate, four stat cards tracking total projects, total tasks, in-progress tasks, and overdue items, a per-project breakdown with member count and aggregated progress, a developer workload table with assigned, completed, and in-progress counts per person, and a chronological feed of recent progress logs across all projects. Every widget re-fetches automatically when a progress entry or task update is broadcast over Socket.IO.
