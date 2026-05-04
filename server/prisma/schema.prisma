@@ -1,0 +1,141 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum MemberRole {
+  MAINTAINER
+  DEVELOPER
+}
+
+enum ProjectStatus {
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  IN_REVIEW
+  DONE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  avatar    String?
+  role      Role     @default(MEMBER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects      ProjectMember[]
+  assignedTasks Task[]          @relation("assignee")
+  createdTasks  Task[]          @relation("creator")
+  progressLogs  ProgressLog[]
+  sentNotes     Note[]          @relation("sender")
+  receivedNotes Note[]          @relation("receiver")
+
+  @@map("users")
+}
+
+model Project {
+  id          String        @id @default(uuid())
+  name        String
+  description String?
+  status      ProjectStatus @default(ACTIVE)
+  deadline    DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  members ProjectMember[]
+  tasks   Task[]
+
+  @@map("projects")
+}
+
+model ProjectMember {
+  id        String     @id @default(uuid())
+  userId    String
+  projectId String
+  role      MemberRole @default(DEVELOPER)
+  joinedAt  DateTime   @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId])
+  @@map("project_members")
+}
+
+model Task {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  status      TaskStatus @default(TODO)
+  priority    Priority   @default(MEDIUM)
+  dueDate     DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  projectId  String
+  assigneeId String?
+  creatorId  String
+
+  project      Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assignee     User?         @relation("assignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  creator      User          @relation("creator", fields: [creatorId], references: [id])
+  progressLogs ProgressLog[]
+
+  @@map("tasks")
+}
+
+model ProgressLog {
+  id          String   @id @default(uuid())
+  percentage  Int      @default(0)
+  description String
+  date        DateTime @default(now())
+
+  taskId String
+  userId String
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("progress_logs")
+}
+
+model Note {
+  id        String   @id @default(uuid())
+  content   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  senderId   String
+  receiverId String
+  projectId  String?
+
+  sender   User @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@map("notes")
+}
